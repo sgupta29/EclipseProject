@@ -22,6 +22,8 @@ import static com.google.devrel.training.conference.service.OfyService.factory;
 
 import com.googlecode.objectify.cmd.Query;
 
+
+
 /**
  * Defines conference APIs.
  */
@@ -235,6 +237,29 @@ public List<Conference> queryConference()
 	return query.list();
 	
 }
+
+@ApiMethod (name="getconferencescreated", path="getconferencescreated",httpMethod = HttpMethod.POST)
+public List<Conference> getconferencescreated(final User user) throws UnauthorizedException
+{
+	
+	if (user==null)
+	{
+		throw new UnauthorizedException("Authorization reuired");
+	}
+	Key key = Key.create(Profile.class, user.getUserId());
+	Query query = ofy().load().type(Conference.class).ancestor(key).order("name");
+	return query.list();
 }
+
+public List<Conference> filterplayground()
+{
+	Query<Conference> query = ofy().load().type(Conference.class).order("name");
+	query = query.filter("city =", "London");
+	query = query.filter("name =", "Shobhit");
+	query = query.filter("month =", 11);
+	return query.list();
+}
+}
+
 
      
